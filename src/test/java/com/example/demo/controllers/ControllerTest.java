@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.math.BigDecimal;
@@ -94,6 +95,26 @@ public class ControllerTest {
         //assertEquals(200, test1User.getStatusCodeValue());
         assertNull("Test2", test2User);
 
+    }
+
+    @Test
+    public void itemControllerTest(){
+        Item items = new Item();
+        items.setDescription("Toy");
+        items.setId(0L);
+        items.setName("bicycle");
+        items.setPrice(new BigDecimal(50.00));
+        List<Item> itemList = new ArrayList<>();
+        itemList.add(items);
+        when(itemRepository.findById(anyLong())).thenReturn(java.util.Optional.of(items));
+        ResponseEntity<Item> responseEntity = itemController.getItemById(0L);
+        assertNotNull(responseEntity);
+        assertEquals(200, responseEntity.getStatusCodeValue());
+
+        when(itemRepository.findByName(anyString())).thenReturn(itemList);
+        ResponseEntity<List<Item>> responseEntityList = itemController.getItemsByName(items.getName());
+        assertNotNull(responseEntityList);
+        assertEquals(200, responseEntityList.getStatusCodeValue());
     }
 
     @Test

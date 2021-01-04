@@ -32,9 +32,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter((new JWTUtils(authenticationManager())).getJwtAuthenticationFilter())
                 .addFilter((new JWTUtils(authenticationManager())).getJwtAuthenticationVerificationFilter())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                //.and()
-                //.formLogin()
-                //.failureHandler(authenticationFailureHandler());
     }
 
     @Override
@@ -43,15 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler();
-    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.parentAuthenticationManager(authenticationManagerBean())
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 }
